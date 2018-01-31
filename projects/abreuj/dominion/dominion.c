@@ -13,10 +13,17 @@ int compare(const void* a, const void* b) {
   return 0;
 }
 
+
+
+
 struct gameState* newGame() {
   struct gameState* g = malloc(sizeof(struct gameState));
   return g;
 }
+
+
+
+
 
 int* kingdomCards(int k1, int k2, int k3, int k4, int k5, int k6, int k7,
 		  int k8, int k9, int k10) {
@@ -33,6 +40,10 @@ int* kingdomCards(int k1, int k2, int k3, int k4, int k5, int k6, int k7,
   k[9] = k10;
   return k;
 }
+
+
+
+
 
 int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
 		   struct gameState *state) {
@@ -198,9 +209,10 @@ int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
   return 0;
 }
 
-int shuffle(int player, struct gameState *state) {
- 
 
+
+
+int shuffle(int player, struct gameState *state) {
   int newDeck[MAX_DECK];
   int newDeckPos = 0;
   int card;
@@ -228,8 +240,12 @@ int shuffle(int player, struct gameState *state) {
   return 0;
 }
 
-int playCard(int handPos, int choice1, int choice2, int choice3, struct gameState *state) 
-{	
+
+
+
+
+
+int playCard(int handPos, int choice1, int choice2, int choice3, struct gameState *state) {	
   int card;
   int coin_bonus = 0; 		//tracks coins gain from actions
 
@@ -268,6 +284,10 @@ int playCard(int handPos, int choice1, int choice2, int choice3, struct gameStat
 	
   return 0;
 }
+
+
+
+
 
 int buyCard(int supplyPos, struct gameState *state) {
   int who;
@@ -308,18 +328,34 @@ int buyCard(int supplyPos, struct gameState *state) {
   return 0;
 }
 
+
+
+
+
 int numHandCards(struct gameState *state) {
   return state->handCount[ whoseTurn(state) ];
 }
+
+
+
 
 int handCard(int handPos, struct gameState *state) {
   int currentPlayer = whoseTurn(state);
   return state->hand[currentPlayer][handPos];
 }
 
+
+
+
+
+
 int supplyCount(int card, struct gameState *state) {
   return state->supplyCount[card];
 }
+
+
+
+
 
 int fullDeckCount(int player, int card, struct gameState *state) {
   int i;
@@ -343,9 +379,17 @@ int fullDeckCount(int player, int card, struct gameState *state) {
   return count;
 }
 
+
+
+
+
 int whoseTurn(struct gameState *state) {
   return state->whoseTurn;
 }
+
+
+
+
 
 int endTurn(struct gameState *state) {
   int k;
@@ -387,6 +431,10 @@ int endTurn(struct gameState *state) {
   return 0;
 }
 
+
+
+
+
 int isGameOver(struct gameState *state) {
   int i;
   int j;
@@ -399,23 +447,22 @@ int isGameOver(struct gameState *state) {
 
   //if three supply pile are at 0, the game ends
   j = 0;
-  for (i = 0; i < 25; i++)
-    {
+  for (i = 0; i < 25; i++) {
       if (state->supplyCount[i] == 0)
-	{
-	  j++;
-	}
-    }
-  if ( j >= 3)
-    {
+	      j++;
+  }
+  if ( j >= 3) {
       return 1;
-    }
+  }
 
   return 0;
 }
 
-int scoreFor (int player, struct gameState *state) {
 
+
+
+
+int scoreFor (int player, struct gameState *state) {
   int i;
   int score = 0;
   //score from hand
@@ -453,6 +500,10 @@ int scoreFor (int player, struct gameState *state) {
 
   return score;
 }
+
+
+
+
 
 int getWinners(int players[MAX_PLAYERS], struct gameState *state) {
   int i;	
@@ -522,6 +573,12 @@ int getWinners(int players[MAX_PLAYERS], struct gameState *state) {
   return 0;
 }
 
+
+
+
+
+
+
 int drawCard(int player, struct gameState *state)
 {	int count;
   int deckCounter;
@@ -580,8 +637,10 @@ int drawCard(int player, struct gameState *state)
   return 0;
 }
 
-int getCost(int cardNumber)
-{
+
+
+
+int getCost(int cardNumber) {
   switch( cardNumber ) 
     {
     case curse:
@@ -651,37 +710,39 @@ int getCost(int cardNumber)
 
 // =-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-
 // -----------------------------------
-// ---- MY CODE STARTS HERE ----------
+// ---- MY FUNCTIONS HERE ------------
 // -----------------------------------
 // =-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-
 
-void smithyEffect(int currentPlayer, struct gameState* state, int handPos) {
 
+// NOTE: BUG ADDED!!
+void smithyEffect(int currentPlayer, struct gameState* state, int handPos) {
   int i;
     //+3 Cards
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++);  // bug: added semi-colon to for loop, so below only runs once
         drawCard(currentPlayer, state);
     
     //discard card from hand
     discardCard(handPos, currentPlayer, state, 0);
 }
 
-void villageEffect(int currentPlayer, struct gameState* state, int handPos) {
 
+// NOTE: BUG ADDED!!
+void villageEffect(int currentPlayer, struct gameState* state, int handPos) {
     //+1 Card
     drawCard(currentPlayer, state);
     
     //+2 Actions
-    state->numActions = state->numActions + 2;
+    state->numActions == state->numActions + 2; // bug here (==)
     
     //discard played card from hand
     discardCard(handPos, currentPlayer, state, 0);
 }
 
 
+// NOTE: BUG ADDED!!
 void adventurerEffect(int drawntreasure, struct gameState* state, int currentPlayer, int cardDrawn, int* temphand, int z) {
-
-  while(drawntreasure<2){
+  while(drawntreasure<=2){ // bug here (<)
     //if the deck is empty we need to shuffle discard and add to deck
     if (state->deckCount[currentPlayer] <1)
       shuffle(currentPlayer, state);
@@ -711,12 +772,13 @@ void adventurerEffect(int drawntreasure, struct gameState* state, int currentPla
 }
 
 
+// NOTE: BUG ADDED!!
 void outpostEffect(struct gameState* state, int currentPlayer, int handPos) {
   //set outpost flag
   state->outpostPlayed++;
   
   //discard card
-  discardCard(handPos, currentPlayer, state, 0);
+  discardCard(0, currentPlayer, state, 0); // bug here, 0 in first arg instead of handPos
 }
 
 
@@ -733,7 +795,7 @@ void great_hallEffect(struct gameState* state, int currentPlayer, int handPos) {
 
 // =-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-
 // -----------------------------------
-// ---- MY CODE ENDS HERE ------------
+// ---- MY FUNCTIONS END -------------
 // -----------------------------------
 // =-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-
 
@@ -750,8 +812,7 @@ void great_hallEffect(struct gameState* state, int currentPlayer, int handPos) {
 
 
 
-int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus)
-{
+int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) {
   int i;
   int j;
   int k;
@@ -1390,9 +1451,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 
 
 
-int discardCard(int handPos, int currentPlayer, struct gameState *state, int trashFlag)
-{
-	
+int discardCard(int handPos, int currentPlayer, struct gameState *state, int trashFlag) {
   //if card is not trashed, added to Played pile 
   if (trashFlag < 1)
     {
@@ -1438,8 +1497,7 @@ int discardCard(int handPos, int currentPlayer, struct gameState *state, int tra
 
 
 
-int gainCard(int supplyPos, struct gameState *state, int toFlag, int player)
-{
+int gainCard(int supplyPos, struct gameState *state, int toFlag, int player) {
   //Note: supplyPos is enum of choosen card
 	
   //check if supply pile is empty (0) or card is not used in game (-1)
@@ -1475,8 +1533,12 @@ int gainCard(int supplyPos, struct gameState *state, int toFlag, int player)
   return 0;
 }
 
-int updateCoins(int player, struct gameState *state, int bonus)
-{
+
+
+
+
+
+int updateCoins(int player, struct gameState *state, int bonus) {
   int i;
 	
   //reset coin count
