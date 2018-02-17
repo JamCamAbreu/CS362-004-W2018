@@ -15,13 +15,13 @@
 void testCondition(int condition, int* fails, int display) {
 
   if (condition) {
-    if (display) {
-      printf(GREEN "\t\t\t[STATUS: PASS]\n" RESET);
+    if (display == 1) {
+      printf(GREEN "\t\t\t[STATUS: PASS]\n\n" RESET);
     }
   }
   else {
-    if (display)
-      printf(RED "\t\t\t[STATUS: FAIL]\n" RESET);
+    if (display == 1)
+      printf(RED "\t\t\t[STATUS: FAIL]\n\n" RESET);
 
     (*fails)++;
   }
@@ -30,12 +30,10 @@ void testCondition(int condition, int* fails, int display) {
 
 
 void displayTestResults(int* fails) {
-  printf("----END TEST----\n");
   printf(YELLOW "RESULTS: " RESET);
   if (*fails > 0)
-    printf(RED "FAILURE. Total test fails: %d\n" RESET, *fails);
+    printf(RED "FAILURE. Total test fails: %d" RESET, *fails);
   else
-    printf(GREEN "SUCCESS. All tests pass.\n" RESET);
-  printf("----------------\n");
+    printf(GREEN "SUCCESS. All tests pass" RESET);
 }
 
