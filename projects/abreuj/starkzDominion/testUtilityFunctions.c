@@ -35,6 +35,5 @@ void displayTestResults(int* fails) {
     printf(RED "FAILURE. Total test fails: %d" RESET, *fails);
   else
     printf(GREEN "SUCCESS. All tests pass" RESET);
-  printf("\n");
 }
 

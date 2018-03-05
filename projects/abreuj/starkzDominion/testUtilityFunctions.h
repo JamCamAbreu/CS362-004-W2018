@@ -14,7 +14,7 @@
 
 // CHANGE THIS '#if 0' to '#if 1' to turn on colors
 
-#if 1
+#if 0
   #define RED     "\x1b[31m"
   #define YELLOW  "\x1b[33m"
   #define GREEN   "\x1b[32m"

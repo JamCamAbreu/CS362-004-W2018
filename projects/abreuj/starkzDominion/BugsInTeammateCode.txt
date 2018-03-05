@@ -1,0 +1,358 @@
+NOTE: Because we are required to submit only one file for all of our bug reports, 
+you will have to scroll down to see each bug report. I headed each report to make
+finding the report easier. In practice, I would have prefered to have a different 
+file for each report. 
+
+For the reports I used the recommended Noverse Bug Reporting Template from our 
+week 6 modules in class. 
+
+
+***********************************
+* BUG REPORT 1: Smithy Card       *
+***********************************
+
+==============================
+
+Title: 'played pile' size wrong after running test for smithy card
+
+Class: "Incorrect gameplay behavior"
+
+Date: 03/01/2018
+Reported By: James Cameron Abreu
+Email: abreuj@oregonstate.edu
+
+Product: Dominion               Version: branch -> starkz-assignment-4
+URL: https://github.com/zachnstarkgithub/CS362-004-W2018/tree/starkz-assignment-4
+
+GNU Make 3.82 (Built for x86_64-redhat-linux-gnu)
+gcc version 4.8.5 20150623 (Red Hat 4.8.5-16) (GCC)
+
+Is it reproducible: Yes
+
+Description
+===========
+The unit test for the smithy card failed due to a wrong size of played cards after 
+running the effect. The function under test is called:
+
+  int playSmithy(struct gameState *state, int player, int handPos)
+
+...and located in dominion.c
+
+
+Steps to Produce/Reproduce
+--------------------------
+
+cardtest1.c suffices to catch this error. 
+Execute the following command:
+make cardtest1
+
+Here is the function code under test:
+
+int playSmithy(struct gameState *state, int player, int handPos)
+{
+    int i = 0;
+
+    //+3 Cards
+    for (i=0; i < 3; i++)
+    {
+        drawCard(player, state);
+    }
+
+    //discard Smithy from hand
+    //BUG: line edited to trash Smithy from hand instead of putting it into
+    //the played pile. You won't see Smithy in your deck ever again.
+    discardCard(handPos, player, state, 1);
+    return 0;
+}
+
+
+
+Expected Results
+----------------
+The played pile should contain 1 card after running the smithy effect function, 
+
+
+Actual Results
+--------------
+
+but instead it remains at zero, meaning the card will be lost forever after playing 
+it.
+
+
+Workarounds
+-----------
+[none]
+
+
+Attachments
+-----------
+[none]
+
+
+Other Information
+-----------------
+[none]
+
+
+
+
+
+
+
+
+
+
+***********************************
+* BUG REPORT 2: Adventurer Card   *
+***********************************
+
+==============================
+
+Title: "Wrong number of treasures in hand after playing adventurer card"
+
+Class: "Incorrect gameplay behavior"
+
+Date: 03/01/2018
+Reported By: James Cameron Abreu
+Email: abreuj@oregonstate.edu
+
+Product: Dominion               Version: branch -> starkz-assignment-4
+URL: https://github.com/zachnstarkgithub/CS362-004-W2018/tree/starkz-assignment-4
+
+GNU Make 3.82 (Built for x86_64-redhat-linux-gnu)
+gcc version 4.8.5 20150623 (Red Hat 4.8.5-16) (GCC)
+
+Is it reproducible: Yes
+
+Description
+===========
+
+The number of treasure cards in the player's hand is more than desired after 
+the player plays the adventurer card (more specifically, after running the 
+playAdventurer function.)
+
+
+Steps to Produce/Reproduce
+--------------------------
+My unit test called 'cardtest2' is perfect for catching the bug. We can see 
+when running the test that in the case that the player starts with 0 treasure cards
+then he ends up with the correct amount of treasure cards after running the effect
+(which is 2 treasure cards). However, if the player starts with 1 treasure card, 
+then he ends up with 3, which is more than desired (2 max, desired). 
+
+Here is the function code under test:
+
+int playAdventurer(struct gameState *state, int player, int handPos)
+{
+    int drawntreasure = 0;
+    int z = 0;
+    int temphand[MAX_HAND];
+    int cardDrawn = 0;
+
+    while (drawntreasure<2)
+    {
+        //if the deck is empty we need to shuffle discard and add to deck
+        if (state->deckCount[player] < 1)
+        {
+            shuffle(player, state);
+        }
+        drawCard(player, state);
+
+        // look at top card of hand for what was drawn
+        cardDrawn = state->hand[player][state->handCount[player] - 1];
+        if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
+        {
+            drawntreasure++;
+        }
+        else{
+            temphand[z]=cardDrawn;
+            // this removes most recently drawn hand
+            state->handCount[player]--;
+            z++;
+        }
+    }
+    //BUG: change >= to >. One card will not be discarded and will be lost to trash
+    while(z-1>0){
+        //discard all cards in play that have been drawn
+        state->discard[player][state->discardCount[player]++]=temphand[z-1];
+        z=z-1; 
+    }
+
+    return 0;
+}
+
+
+We can also see that the test fails with many different kinds of game states.
+My randomtestadventurer.c random tester was used to feed in many different
+seeds for an arbitrary amount of starting treasures. Here is a snippet of the
+test results given different random seeds:
+
+RESULTS: FAILURE. Total test fails: 1, seed: 3
+RESULTS: FAILURE. Total test fails: 1, seed: 4
+RESULTS: FAILURE. Total test fails: 1, seed: 5
+RESULTS: FAILURE. Total test fails: 1, seed: 6
+RESULTS: FAILURE. Total test fails: 1, seed: 7
+
+.... and so on. 
+
+
+Expected Results
+----------------
+No matter how many treasure cards the player starts with, he or she should always 
+have 2 treasure cards after playing the adventurer card.
+
+Actual Results
+--------------
+If they player has one treasure card before playing the adventurer card, he or she
+ends up with 3 treasure cards, which is more than desired. 
+
+Workarounds
+-----------
+[none]
+
+
+Attachments
+-----------
+[none]
+
+
+Other Information
+-----------------
+[none]
+
+
+
+
+
+
+
+
+
+
+***********************************
+* BUG REPORT 3: Adventurer Card   *
+***********************************
+
+==============================
+
+Title: "Wrong 
+
+Class: "Incorrect gameplay behavior"
+
+Date: 03/01/2018
+Reported By: James Cameron Abreu
+Email: abreuj@oregonstate.edu
+
+Product: Dominion               Version: branch -> starkz-assignment-4
+URL: https://github.com/zachnstarkgithub/CS362-004-W2018/tree/starkz-assignment-4
+
+GNU Make 3.82 (Built for x86_64-redhat-linux-gnu)
+gcc version 4.8.5 20150623 (Red Hat 4.8.5-16) (GCC)
+
+Is it reproducible: Yes
+
+Description
+===========
+
+
+
+Steps to Produce/Reproduce
+--------------------------
+
+
+
+
+Here is the function code under test:
+
+
+
+Expected Results
+----------------
+
+
+Actual Results
+--------------
+
+
+Workarounds
+-----------
+[none]
+
+
+Attachments
+-----------
+[none]
+
+
+Other Information
+-----------------
+[none]
+
+
+
+
+
+
+
+
+***********************************
+* BUG REPORT 2: Adventurer Card   *
+***********************************
+
+==============================
+
+Title:
+
+Class: "Incorrect gameplay behavior"
+
+Date: 03/01/2018
+Reported By: James Cameron Abreu
+Email: abreuj@oregonstate.edu
+
+Product: Dominion               Version: branch -> starkz-assignment-4
+URL: https://github.com/zachnstarkgithub/CS362-004-W2018/tree/starkz-assignment-4
+
+GNU Make 3.82 (Built for x86_64-redhat-linux-gnu)
+gcc version 4.8.5 20150623 (Red Hat 4.8.5-16) (GCC)
+
+Is it reproducible: Yes
+
+Description
+===========
+
+
+
+Steps to Produce/Reproduce
+--------------------------
+
+
+
+
+Here is the function code under test:
+
+
+
+Expected Results
+----------------
+
+
+Actual Results
+--------------
+
+
+Workarounds
+-----------
+[none]
+
+
+Attachments
+-----------
+[none]
+
+
+Other Information
+-----------------
+[none]
+
+
+
